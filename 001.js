@@ -1,7 +1,7 @@
-const add = (n, m) =>  n + m
-const substract = (n, m) =>  n - m
-const divide = (n, m) => Math.round(n / m)
-const multiply = (n, m) =>  n * m
+const add = (n, m) =>  n + m;
+const substract = (n, m) =>  n - m;
+const divide = (n, m) => Math.round(n / m);
+const multiply = (n, m) =>  n * m;
 String.prototype.removeCharAt = function (i) {
     var tmp = this.split(''); // convert to an array
     tmp.splice(i - 1 , 1); // remove 1 element from the array (adjusting for non-zero-indexed counts)
@@ -25,26 +25,30 @@ function operate(n, opreator, m) {
 }
 const display =  document.querySelector('#display');
 const opreatorKeys = document.querySelectorAll('[data-action]'); 
-const calculator = document.querySelector('[data-action="calculate"]')
+const calculator = document.querySelector('[data-action="calculate"]');
 display.textContent = '';
 const keys = document.querySelector('.calculator__keys');
-let last = display.textContent.slice(-1);
+let lastIndex = display.textContent.slice(-1);
+//  listin to the user input
 keys.addEventListener('click', (e) => {
     if (e.target.tagName == 'BUTTON') {
-        console.log(last)
         let key = e.target; 
+        // if the user input opreator 
         if(key.dataset.type){
+            // after blank text
             if(!display.textContent)
             {
                 opreatorKeys.forEach((item) => {item.desabled = true});
-                last = display.textContent.slice(-1);
+                lastIndex = display.textContent.slice(-1);
             }
-            else if(opreators.includes(last)){
+            // after opreator
+            else if(opreators.includes(lastIndex)){
                 opreatorKeys.forEach((item) => {item.desabled = true});
-                last = display.textContent.slice(-1);
+                lastIndex = display.textContent.slice(-1);
             }
-            else if(!isNaN(last)){
-
+            // after number 
+            else if(!isNaN(lastIndex)){
+                // if there was number + opreator + number then opreator go here 
                 if(opreator){
                     let str = display.textContent;
                     number2 = str.match(/\d+/g)?.[1];
@@ -62,40 +66,47 @@ keys.addEventListener('click', (e) => {
                 number1 =parseInt(display.textContent);
                 opreator = key.textContent;
                 display.textContent += key.textContent;
-                last = display.textContent.slice(-1);
+                lastIndex = display.textContent.slice(-1);
             }
             
         }
+        // if the user input number 
         else if (!key.dataset.action) {
+            // after blank text
             if (!display.textContent) {
                 opreatorKeys.forEach((item) => {item.desabled = false}); 
                 display.textContent = key.textContent;
-                last = display.textContent.slice(-1);
+                number1 = display.textContent;
+                lastIndex = display.textContent.slice(-1);
             }
-            else if (!isNaN(last)){
+            // after number 
+            else if (!isNaN(lastIndex)){
                 display.textContent += key.textContent;
-                last = display.textContent.slice(-1);
+                lastIndex = display.textContent.slice(-1);
             }
-            else if(opreators.includes(last)){
+            //after opreator
+            else if(opreators.includes(lastIndex)){
                 opreatorKeys.forEach((item) => {item.desabled = false});
                 display.textContent += key.textContent;    
-                last = display.textContent.slice(-1);
+                lastIndex = display.textContent.slice(-1);
             }
         }
         else if (key.dataset.action == 'calculate') {
-            if(!last)
+            if(!lastIndex)
             {
                 calculator.desabled = true;
             }
-            else if (opreators.includes(last))
+            //desable = if the last index is opreator
+            else if (opreators.includes(lastIndex))
             {
                 calculator.desabled = true;
             }
-            else if (!isNaN(last))
+            else if (!isNaN(lastIndex))
             {
                 if (opreator) {
                     number2 = display.textContent.match(/\d+/g)[1];
                     number2 = parseInt(number2);
+                    //redundant code
                     if (number2 == 0 && opreator == "÷") { 
                         display.textContent = 0;
                         number1 = 0;
@@ -119,12 +130,12 @@ keys.addEventListener('click', (e) => {
         else if (key.dataset.action == 'delete')
         {
             let string = display.textContent.length;
-            if (opreators.includes(last)) {
+            if (opreators.includes(lastIndex)) {
                 opreatorKeys.forEach((item) => {item.desabled = false});
-                last = display.textContent.slice(-1);
+                lastIndex = display.textContent.slice(-1);
             }
             display.textContent = display.textContent.removeCharAt(string);
-            last = display.textContent.slice(-1);
+            lastIndex = display.textContent.slice(-1);
             opreator = "";
         }
     }
